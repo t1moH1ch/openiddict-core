@@ -2,11 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ dev, rel/* ]
-    tags: [ '*' ]
+    branches: [ workflow_build ]
   pull_request:
-    branches: [ dev, rel/* ]
-  workflow_dispatch:
+    branches: [ workflow_build ]
 
 env:
   DOTNET_MULTILEVEL_LOOKUP: 0
@@ -140,44 +138,24 @@ jobs:
           exit 1
         }
 
-  push-packages-myget:
-    needs: [ build, validate-packages ]
+  create-release:
+    name: Create Release
     runs-on: ubuntu-latest
-    if: |
-      (github.ref_name == github.event.repository.default_branch ||
-       startsWith(github.ref, 'refs/heads/dev') ||
-       startsWith(github.ref, 'refs/heads/rel/') ||
-       startsWith(github.ref, 'refs/tags/'))
+    needs: [build, validate-packages]
+
     steps:
-    - name: Download packages
-      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
-      with:
-        name: packages-windows
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
-
-    - name: Push packages to MyGet.org
-      env:
-        MYGET_API_KEY: ${{ secrets.MYGET_API_KEY }}
-      run: dotnet nuget push "*.nupkg" --api-key "${MYGET_API_KEY}" --skip-duplicate --source https://www.myget.org/F/openiddict/api/v3/index.json
-
-  push-packages-nuget:
-    needs: [ build, validate-packages ]
-    runs-on: ubuntu-latest
-    if: |
-      github.event.repository.fork == false &&
-      startsWith(github.ref, 'refs/tags/')
-    steps:
-    - name: Download packages
-      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
-      with:
-        name: packages-windows
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
-
-    - name: Push packages to NuGet.org
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      run: dotnet nuget push "*.nupkg" --api-key "${NUGET_API_KEY}" --skip-duplicate --source https://api.nuget.org/v3/index.json
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUSH_NUGET }}
+        with:
+          tag_name: ${{ needs.generate-version.outputs.new_version }}
+          release_name: Release ${{ needs.generate-version.outputs.new_version }}
+          body: |
+            Changes in this Release you can see https://github.com/t1moH1ch/openiddict-core/commits/main/
+          draft: false
+          prerelease: false
+        
