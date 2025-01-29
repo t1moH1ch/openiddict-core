@@ -106,7 +106,7 @@ jobs:
         path: ./artifacts/packages/Release/Shipping
 
     - name: Publish package in GitHub
-      run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://nuget.pkg.github.com/t1moH1ch/index.json
+      run: dotnet nuget push ./artifacts/packages/Release/Shipping/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://nuget.pkg.github.com/t1moH1ch/index.json
 
     - name: Publish test results
       if: ${{ always() }}
