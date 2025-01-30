@@ -173,13 +173,16 @@ jobs:
 
       - name: Generate NuGet package
         run: |
-          dotnet pack src/** \
+          Get-ChildItem  | Foreach-Object { \
+          dotnet pack $_.FullName/*.csproj \
           --no-build \
+          --no-restore \
           --configuration Release \
           --version-suffix "preview-${{ needs.build.outputs.new_version }}"
           -p:PackageVersion=7.0.0 \
           -p:RepositoryUrl=https://github.com/t1moH1ch/openiddict-core \
-          -o artifacts/packages/Release/GitHub
+          -o artifacts/packages/Release/GitHub \
+          }
       
       - name: Publish package in GitHub
         if: ${{ runner.os == 'Linux' }}
@@ -199,8 +202,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PUSH_NUGET }}
         with:
-          tag_name: 7.0.0.preview-${{ needs.build.outputs.new_version }}
-          release_name: PreRelease 7.0.0.preview-${{ needs.build.outputs.new_version }}
+          tag_name: 7.0.0-preview.${{ needs.build.outputs.new_version }}
+          release_name: PreRelease 7.0.0-preview.${{ needs.build.outputs.new_version }}
           body: |
             Changes in this Release you can see https://github.com/t1moH1ch/openiddict-core/commits/dev/
           draft: false
