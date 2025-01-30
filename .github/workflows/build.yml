@@ -173,8 +173,9 @@ jobs:
 
       - name: Generate NuGet package
         run: |
-          Get-ChildItem  | Foreach-Object { \
-          dotnet pack $_.FullName/*.csproj \
+          for D in ./src/*; do \
+          if [ -d "${D}" ]; then
+          dotnet pack "${D}"/*.csproj \
           --no-build \
           --no-restore \
           --configuration Release \
@@ -182,10 +183,10 @@ jobs:
           -p:PackageVersion=7.0.0 \
           -p:RepositoryUrl=https://github.com/t1moH1ch/openiddict-core \
           -o artifacts/packages/Release/GitHub \
-          }
+          fi
+          done
       
       - name: Publish package in GitHub
-        if: ${{ runner.os == 'Linux' }}
         run: dotnet nuget push ./artifacts/packages/Release/GitHub/*.nupkg --api-key ${{ secrets.PUSH_GITHUB }} --source https://nuget.pkg.github.com/t1moH1ch/index.json
 
   create-release:
