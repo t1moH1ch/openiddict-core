@@ -174,8 +174,8 @@ jobs:
       - name: Generate NuGet package
         run: |
           for D in ./src/*; do \
-          if [ -d "${D}" ]; then
-          dotnet pack "${D}"/*.csproj \
+          if [ -d "$D" ]; then \
+          dotnet pack "$D"/*.csproj \
           --no-build \
           --no-restore \
           --configuration Release \
@@ -183,7 +183,7 @@ jobs:
           -p:PackageVersion=7.0.0 \
           -p:RepositoryUrl=https://github.com/t1moH1ch/openiddict-core \
           -o artifacts/packages/Release/GitHub \
-          fi
+          fi \
           done
       
       - name: Publish package in GitHub
