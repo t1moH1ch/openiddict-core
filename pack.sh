@@ -1,4 +1,6 @@
-﻿for file in $(find ./src/ -maxdepth 2 -name '*.csproj')
+﻿#!/usr/bin/env bash
+
+for file in $(find ./src/ -maxdepth 2 -name '*.csproj')
 do
   dotnet pack $file \
     --configuration Release \
