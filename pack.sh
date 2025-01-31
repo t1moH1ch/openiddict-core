@@ -1,5 +1,5 @@
-﻿for file in $(find ./src/ -maxdepth 2 -name '*.csproj') \
-do \
+﻿for file in $(find ./src/ -maxdepth 2 -name '*.csproj')
+do
   dotnet pack $file \
     --configuration Release \
     -p:PackageVersion="7.0.0-preview" \
