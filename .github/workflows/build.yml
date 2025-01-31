@@ -31,12 +31,12 @@ jobs:
       matrix:
         os: [ macos-latest, ubuntu-latest, windows-latest ]
         include:
-        - os: macos-latest
-          os_name: macos
+        #- os: macos-latest
+        #  os_name: macos
         - os: ubuntu-latest
           os_name: linux
-        - os: windows-latest
-          os_name: windows
+        #- os: windows-latest
+        #  os_name: windows
 
     steps:
     - name: Select Xcode version
@@ -173,15 +173,7 @@ jobs:
 
       - name: Generate NuGet package
         shell: pwsh
-        run: |
-          for file in $(find ./src/ -maxdepth 2 -name '*.csproj') \
-          do \
-            dotnet pack $file \
-              --configuration Release \
-              -p:PackageVersion="7.0.0-preview.${{ needs.build.outputs.new_version }}" \
-              -p:RepositoryUrl=https://github.com/t1moH1ch/openiddict-core \
-              -o artifacts/packages/Release/GitHub; \
-          done
+        run: ./pack.sh
       
       - name: Publish package in GitHub
         run: dotnet nuget push ./artifacts/packages/Release/GitHub/*.nupkg --api-key ${{ secrets.PUSH_GITHUB }} --source https://nuget.pkg.github.com/t1moH1ch/index.json
