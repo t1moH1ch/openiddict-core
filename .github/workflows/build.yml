@@ -172,18 +172,15 @@ jobs:
               6.0.x
 
       - name: Generate NuGet package
+        shell: pwsh
         run: |
-          for D in ./src/*; do \
-          if [ -d "$D" ]; then \
-          dotnet pack "$D"/*.csproj \
-          --no-build \
-          --no-restore \
-          --configuration Release \
-          --version-suffix "preview-${{ needs.build.outputs.new_version }}"
-          -p:PackageVersion=7.0.0 \
-          -p:RepositoryUrl=https://github.com/t1moH1ch/openiddict-core \
-          -o artifacts/packages/Release/GitHub \
-          fi \
+          for file in $(find ./src/ -maxdepth 2 -name '*.csproj') \
+          do \
+            dotnet pack $file \
+              --configuration Release \
+              -p:PackageVersion="7.0.0-preview.${{ needs.build.outputs.new_version }}" \
+              -p:RepositoryUrl=https://github.com/t1moH1ch/openiddict-core \
+              -o artifacts/packages/Release/GitHub; \
           done
       
       - name: Publish package in GitHub
