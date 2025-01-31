@@ -110,6 +110,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C5E38924-35AF-48E3-B629-A56BCBC02F04}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
+		pack.yml = pack.yml
 		.github\workflows\push.yml = .github\workflows\push.yml
 	EndProjectSection
 EndProject
