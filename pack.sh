@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 for file in $(find ./src/ -maxdepth 2 -name '*.csproj')
 do
