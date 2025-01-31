@@ -6,13 +6,6 @@ on:
   pull_request:
     branches: [ workflow_build ]
 
-env:
-  DOTNET_MULTILEVEL_LOOKUP: 0
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
-  NUGET_XMLDOC_MODE: skip
-  TERM: xterm
-
 permissions:
   contents: read
 
