@@ -30,7 +30,7 @@ jobs:
         run: chmod +x pack.sh
 
       - name: Generate NuGet package
-        run: pack.sh
+        run: bash pack.sh
       
       - name: Publish package in GitHub
         run: dotnet nuget push ./artifacts/packages/Release/GitHub/*.nupkg --api-key ${{ secrets.PUSH_GITHUB }} --source https://nuget.pkg.github.com/t1moH1ch/index.json
